@@ -3,12 +3,6 @@ String inputString  = "";
 boolean stringComplete = false;
 int MAX_INPUT_SIZE = 10000;
 
-//DEFINE PINS
-int AppleIRledPin = A1;
-int tvIRledPin = A2;
-int fireplaceIRledPin = A3;
-int soundbarIRledPin = A0;
-
 //indicator light
 int indicatorPin = 13;
 
@@ -30,10 +24,6 @@ void setup() {
   inputString.reserve(MAX_INPUT_SIZE);
 
   // SET AS OUTPUT
-  //remotes
-  pinMode(AppleIRledPin, OUTPUT);
-  pinMode(tvIRledPin, OUTPUT);
-  pinMode(fireplaceIRledPin, OUTPUT);
 
   //indicator
   pinMode(indicatorPin,OUTPUT);
