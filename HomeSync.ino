@@ -41,10 +41,6 @@ void setup() {
   pinMode(blindsUp, OUTPUT);
 
   //SET INITIAL VALUES
-  //remotes
-  digitalWrite(AppleIRledPin, LOW);
-  digitalWrite(tvIRledPin, LOW);
-  digitalWrite(fireplaceIRledPin, LOW);
 
   //indicator
   digitalWrite(indicatorPin,LOW);
@@ -74,7 +70,7 @@ void serialEvent() {
     // get the new byte:
     char inChar = (char)Serial.read();
 
-    if(inputString.length() = MAX_INPUT_SIZE) {
+    if(inputString.length() == MAX_INPUT_SIZE) {
         inputString = "";
     }
 
@@ -128,7 +124,7 @@ void sendMessage(String msg) {
     }
 }
 
-boolean contains(String target, String source) {
+bool contains(String target, String source) {
     if(target.indexOf(source) > 0) {
         return true;
     }
@@ -163,7 +159,6 @@ boolean isValidChar(char c){
    //see if letter is lower case
   if(ci>=97 && ci<=122)
     return true;
-
 
   //see if letter is an underscore
   if(ci == 95)
