@@ -1,7 +1,7 @@
 
 String inputString  = "";
 int MAX_INPUT_SIZE = 10000;
-int FLASH_DELAY = 100;
+int FLASH_DELAY = 400;
 
 //indicator light
 int indicatorPin = 13;
@@ -69,6 +69,7 @@ void serialEvent() {
     char inChar = (char)Serial.read();
 
     if(inputString.length() == MAX_INPUT_SIZE-1) {
+      
         sendMessage(inputString);
         inputString = "";
     }
@@ -79,6 +80,8 @@ void serialEvent() {
     }
 
     if (inChar == '\n' || inChar == ';') {
+      
+      Serial.println("inputString: " + inputString);
       sendMessage(inputString);
       inputString = "";
 
@@ -87,7 +90,11 @@ void serialEvent() {
 }
 
 void sendMessage(String msg) {
+
+      Serial.println("SEND MSG: " + msg);
+  
     if (contains(msg,"ELECTRONICS_BLINDS_UP")) {
+      Serial.println("SEND ELECTRONICS_BLINDS_UP");
       click_blinds_button(blindsUp);
       flashIndicator(1);
     }
@@ -121,11 +128,10 @@ void sendMessage(String msg) {
     }
 }
 
-bool contains(String target, String source) {
-    if(target.indexOf(source) > 0) {
-        return true;
-    }
-    return false;
+bool contains(String source, String target) {
+
+    // TODO improve contains
+     return source.equals(target);
 }
 void click_blinds_button(int button){
   digitalWrite(button,LOW);
@@ -142,7 +148,7 @@ void flashIndicator(int rep){
       digitalWrite(indicatorPin,HIGH);
       delay(FLASH_DELAY);
       digitalWrite(indicatorPin,LOW);
-      delay(70);
+      delay(FLASH_DELAY);
   }
 }
 
@@ -158,6 +164,4 @@ boolean isValidChar(char c){
     return true;
 
   return false;
-
-
 }
