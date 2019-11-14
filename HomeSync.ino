@@ -1,7 +1,7 @@
 
 String inputString  = "";
-boolean stringComplete = false;
 int MAX_INPUT_SIZE = 10000;
+int FLASH_DELAY = 100;
 
 //indicator light
 int indicatorPin = 13;
@@ -21,7 +21,7 @@ int kitchenLight = 9;
 //DEFINE ARRAYS FOR SENDING
 void setup() {
   Serial.begin(115200);
-  inputString.reserve(MAX_INPUT_SIZE);
+  inputString.reserve(MAX_INPUT_SIZE+1);
 
   // SET AS OUTPUT
 
@@ -58,19 +58,18 @@ void setup() {
   digitalWrite(blindsDown, HIGH);
   digitalWrite(blindsUp, HIGH);
 
-  flashIndicator(100,4);
+  flashIndicator(4);
 }
 
-void loop()
-{}
+void loop(){}
 
 void serialEvent() {
-  boolean wordTerminated = false;
-  while (Serial.available() and !wordTerminated) {
+  while (Serial.available()) {
     // get the new byte:
     char inChar = (char)Serial.read();
 
-    if(inputString.length() == MAX_INPUT_SIZE) {
+    if(inputString.length() == MAX_INPUT_SIZE-1) {
+        sendMessage(inputString);
         inputString = "";
     }
 
@@ -83,44 +82,42 @@ void serialEvent() {
       sendMessage(inputString);
       inputString = "";
 
-      wordTerminated = true;
-      stringComplete = true;
     }
   }
 }
 
 void sendMessage(String msg) {
     if (contains(msg,"ELECTRONICS_BLINDS_UP")) {
-      click_blinds_button(blindsUp,6000);
-      flashIndicator(500,1);
+      click_blinds_button(blindsUp);
+      flashIndicator(1);
     }
     if (contains(msg,"ELECTRONICS_BLINDS_STOP")){
-      click_blinds_button(blindsStop,6000);
-      flashIndicator(500,2);
+      click_blinds_button(blindsStop);
+      flashIndicator(2);
     }
     if (contains(msg,"ELECTRONICS_BLINDS_DOWN")){
-      click_blinds_button(blindsDown,6000);
-      flashIndicator(500,3);
+      click_blinds_button(blindsDown);
+      flashIndicator(3);
     }
     if (contains(msg,"ELECTRONICS_BEDROOM_LIGHTS")){
       changeRelay(bedroomLight);
-      flashIndicator(500,4);
+      flashIndicator(4);
     }
     if (contains(msg,"ELECTRONICS_LIVINGROOM_LIGHTS")){
       changeRelay(livingRoomLight);
-      flashIndicator(500,5);
+      flashIndicator(5);
     }
     if (contains(msg,"ELECTRONICS_KITCHENK_LIGHTS")){
       changeRelay(kitchenLight);
-      flashIndicator(500,6);
+      flashIndicator(6);
     }
     if (contains(msg,"ELECTRONICS_DINING_LIGHTS")){
       changeRelay(dinningRoomLight);
-      flashIndicator(500,7);
+      flashIndicator(7);
     }
     if (contains(msg,"ELECTRONICS_PATIO_LIGHTS")){
       changeRelay(porchLight);
-      flashIndicator(500,8);
+      flashIndicator(8);
     }
 }
 
@@ -130,7 +127,7 @@ bool contains(String target, String source) {
     }
     return false;
 }
-void click_blinds_button(int button,int del){
+void click_blinds_button(int button){
   digitalWrite(button,LOW);
   delay(500);
   digitalWrite(button,HIGH);
@@ -140,10 +137,10 @@ void changeRelay(int relayPin){
   digitalWrite(relayPin, !digitalRead(relayPin));
 }
 
-void flashIndicator(int time, int rep){
+void flashIndicator(int rep){
     for(int i = 0; i < rep; i++){
       digitalWrite(indicatorPin,HIGH);
-      delay(time);
+      delay(FLASH_DELAY);
       digitalWrite(indicatorPin,LOW);
       delay(70);
   }
@@ -153,11 +150,7 @@ boolean isValidChar(char c){
   int ci = c+0;
 
   //see if letter is capital
-  if(ci>=65 && ci<=90)
-    return true;
-
-   //see if letter is lower case
-  if(ci>=97 && ci<=122)
+  if(ci >= 65 && ci <= 90)
     return true;
 
   //see if letter is an underscore
