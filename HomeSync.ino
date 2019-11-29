@@ -69,7 +69,7 @@ void serialEvent() {
     char inChar = (char)Serial.read();
 
     if(inputString.length() == MAX_INPUT_SIZE-1) {
-      
+
         sendMessage(inputString);
         inputString = "";
     }
@@ -80,8 +80,6 @@ void serialEvent() {
     }
 
     if (inChar == '\n' || inChar == ';') {
-      
-      Serial.println("inputString: " + inputString);
       sendMessage(inputString);
       inputString = "";
 
@@ -92,45 +90,42 @@ void serialEvent() {
 void sendMessage(String msg) {
 
       Serial.println("SEND MSG: " + msg);
-  
+
     if (contains(msg,"ELECTRONICS_BLINDS_UP")) {
       Serial.println("SEND ELECTRONICS_BLINDS_UP");
       click_blinds_button(blindsUp);
-      flashIndicator(1);
     }
     if (contains(msg,"ELECTRONICS_BLINDS_STOP")){
+      Serial.println("ELECTRONICS_BLINDS_STOP");
       click_blinds_button(blindsStop);
-      flashIndicator(2);
     }
     if (contains(msg,"ELECTRONICS_BLINDS_DOWN")){
+      Serial.println("ELECTRONICS_BLINDS_DOWN");
       click_blinds_button(blindsDown);
-      flashIndicator(3);
     }
     if (contains(msg,"ELECTRONICS_BEDROOM_LIGHTS")){
+      Serial.println("ELECTRONICS_BEDROOM_LIGHTS");
       changeRelay(bedroomLight);
-      flashIndicator(4);
     }
     if (contains(msg,"ELECTRONICS_LIVINGROOM_LIGHTS")){
+      Serial.println("ELECTRONICS_LIVINGROOM_LIGHTS");
       changeRelay(livingRoomLight);
-      flashIndicator(5);
     }
     if (contains(msg,"ELECTRONICS_KITCHENK_LIGHTS")){
+      Serial.println("ELECTRONICS_KITCHENK_LIGHTS");
       changeRelay(kitchenLight);
-      flashIndicator(6);
     }
     if (contains(msg,"ELECTRONICS_DINING_LIGHTS")){
+      Serial.println("ELECTRONICS_DINING_LIGHTS");
       changeRelay(dinningRoomLight);
-      flashIndicator(7);
     }
     if (contains(msg,"ELECTRONICS_PATIO_LIGHTS")){
+      Serial.println("ELECTRONICS_PATIO_LIGHTS");
       changeRelay(porchLight);
-      flashIndicator(8);
     }
 }
 
 bool contains(String source, String target) {
-
-    // TODO improve contains
      return source.equals(target);
 }
 void click_blinds_button(int button){
